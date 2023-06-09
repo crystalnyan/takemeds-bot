@@ -42,6 +42,17 @@ async fn answer(bot: Bot, msg: Message, cmd: Command, pool: Pool<Sqlite>) -> Res
 
             bot.send_message(msg.chat.id, "Meds added successfully!").await?
         },
+        Command::ViewMeds => {
+            let meds = meds::Meds::view_all((msg.chat.id).0, pool).await;
+
+            let mut meds_list = String::new();
+
+            for med in meds {
+                meds_list.push_str(&format!("{}\n", med.name));
+            }
+
+            bot.send_message(msg.chat.id, meds_list).await?
+        },
         _ => bot.send_message(msg.chat.id, Command::descriptions().to_string()).await?
 
     };
