@@ -5,6 +5,7 @@ pub async fn create_meds_table(pool: &Pool<Sqlite>) {
         r#"
     CREATE TABLE IF NOT EXISTS meds (
         id INTEGER PRIMARY KEY,
+        chat_id INTEGER NOT NULL,
         name TEXT NOT NULL
     )
     "#)

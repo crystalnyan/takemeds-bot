@@ -26,7 +26,7 @@ enum Command {
     #[command(description = "start")]
     Start,
     #[command(description = "add a new meds reminder")]
-    AddMeds,
+    AddMeds(String),
     #[command(description = "view your meds reminders")]
     ViewMeds,
     #[command(description = "list available commands")]
@@ -35,11 +35,10 @@ enum Command {
 
 async fn answer(bot: Bot, msg: Message, cmd: Command, pool: Pool<Sqlite>) -> ResponseResult<()> {
     match cmd {
-        Command::AddMeds => {
-            bot.send_message(msg.chat.id, "What meds do you want to add?").await?;
+        Command::AddMeds(name) => {
+            //bot.send_message(msg.chat.id, "What meds do you want to add?").await?;
 
-            let meds = meds::Meds::new(1, "test".to_string());
-            meds::Meds::add_to_db(&meds, pool).await;
+            meds::Meds::add_to_db((msg.chat.id).0, name, pool).await;
 
             bot.send_message(msg.chat.id, "Meds added successfully!").await?
         },
