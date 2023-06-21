@@ -1,6 +1,2 @@
+.env
 .idea/
-
-target/
-Cargo.lock
-
-*.sqlite3
