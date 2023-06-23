@@ -1,4 +1,4 @@
-import { Composer } from "https://deno.land/x/grammy@v1.16.2/composer.ts";
+import { Composer } from "../deps.ts";
 import { MyContext } from "../context.ts";
 
 const composer = new Composer<MyContext>();

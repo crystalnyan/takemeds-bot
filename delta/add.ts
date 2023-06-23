@@ -1,7 +1,6 @@
-import { Composer } from "https://deno.land/x/grammy@v1.16.2/composer.ts";
+import { Composer, createConversation  } from "../deps.ts";
 import { MyContext, MyConversation } from "../context.ts";
 import { add_med } from "../database/db.ts";
-import {createConversation} from "https://deno.land/x/grammy_conversations@v1.1.2/conversation.ts";
 
 const composer = new Composer<MyContext>();
 

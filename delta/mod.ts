@@ -1,4 +1,4 @@
-import { Bot } from "https://deno.land/x/grammy@v1.16.2/mod.ts";
+import { Bot } from "../deps.ts";
 import { MyContext } from "../context.ts";
 import start from "./start.ts";
 import help from "./help.ts";

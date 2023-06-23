@@ -1,7 +1,6 @@
-import {Bot} from "https://deno.land/x/grammy@v1.16.2/mod.ts";
-import { load } from "https://deno.land/std@0.192.0/dotenv/mod.ts";
+import { Bot, load, } from "./deps.ts";
 import { create_meds_table } from "./database/db.ts";
-import context, {MyContext} from "./context.ts";
+import context, { MyContext } from "./context.ts";
 import delta from "./delta/mod.ts";
 
 const env = await load();
