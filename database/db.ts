@@ -17,6 +17,6 @@ export function add_med(name: string, chat_id: number) {
         `INSERT INTO meds (name, chat_id) VALUES (?, ?)`, [name, chat_id]);
 }
 
-export function get_meds() {
-    let rows = db.query(`SELECT * FROM meds`);
+export function get_meds_rows(chat_id: number) {
+    return db.query(`SELECT * FROM meds WHERE chat_id = ?`, [chat_id]);
 }
