@@ -2,6 +2,8 @@ import { Composer, createConversation  } from "../deps.ts";
 import { MyContext, MyConversation } from "../context.ts";
 import { add_med } from "../database/db.ts";
 
+import {weekdays} from "../keyboards/weekdays.ts";
+
 const composer = new Composer<MyContext>();
 
 composer.use(createConversation(add_med_conversation));
@@ -13,6 +15,8 @@ composer.command("add", async (ctx) => {
 export async function add_med_conversation(conversation: MyConversation, ctx: MyContext) {
     await ctx.reply("Tell a name:");
     const {message} = await conversation.wait();
+
+    await ctx.reply("Choose days:", {reply_markup: weekdays});
 
     if (ctx.chat !== undefined && message !== undefined && message.text !== undefined) {
         add_med(message.text, ctx.chat.id);
