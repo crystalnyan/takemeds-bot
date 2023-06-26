@@ -1,4 +1,4 @@
-import {InlineKeyboard} from "https://deno.land/x/grammy@v1.16.2/convenience/keyboard.ts";
+import {InlineKeyboard} from "../deps.ts";
 
 export const weekdays = new InlineKeyboard()
     .row()
