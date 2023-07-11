@@ -6,7 +6,7 @@ export type Meds = {
     chat_id: number;
 }
 
-function get_meds(chat_id: number): Meds[] {
+export function get_meds(chat_id: number): Meds[] {
     const rows = get_meds_rows(chat_id);
 
     let meds: Meds[] = [];
@@ -15,4 +15,8 @@ function get_meds(chat_id: number): Meds[] {
     }
 
     return meds;
+}
+
+export function to_string(med: Meds) {
+    return med.name;
 }
