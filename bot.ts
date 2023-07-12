@@ -1,13 +1,11 @@
 import { Bot, load, } from "./deps.ts";
 import { create_meds_table } from "./database/db.ts";
-import context, { MyContext } from "./context.ts";
 import delta from "./delta/mod.ts";
 
 const env = await load();
 const token = env["BOT_TOKEN"];
 
-const bot = new Bot<MyContext>(token);
-await context(bot);
+const bot = new Bot(token);
 await delta(bot);
 
 create_meds_table();

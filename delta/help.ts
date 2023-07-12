@@ -1,7 +1,6 @@
 import { Composer } from "../deps.ts";
-import { MyContext } from "../context.ts";
 
-const composer = new Composer<MyContext>();
+const composer = new Composer();
 
 export const message =
     "Use these commands to:" +

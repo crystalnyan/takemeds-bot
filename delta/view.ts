@@ -1,15 +1,14 @@
 import {Composer} from "../deps.ts";
-import {MyContext} from "../context.ts";
 import {get_meds, to_string} from "../types/meds.ts";
 
-const composer = new Composer<MyContext>();
+const composer = new Composer();
 
 composer.command("view", async (ctx) => {
     await ctx.reply("Your meds:");
 
-    let meds: string = "";
-    let rows = get_meds(ctx.chat.id);
-    for (let med of rows) {
+    let meds = "";
+    const rows = get_meds(ctx.chat.id);
+    for (const med of rows) {
         meds = meds.concat(to_string(med) + "\n");
     }
 

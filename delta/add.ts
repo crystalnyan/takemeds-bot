@@ -1,29 +1,16 @@
-import { Composer, createConversation  } from "../deps.ts";
-import { MyContext, MyConversation } from "../context.ts";
+import { Composer} from "../deps.ts";
 import { add_med } from "../database/db.ts";
 
-import {weekdays} from "../keyboards/weekdays.ts";
+const composer = new Composer();
 
-const composer = new Composer<MyContext>();
+composer.command("add", (ctx) => {
+    const name = ctx.match;
 
-composer.use(createConversation(add_med_conversation));
+    if (!name) return ctx.reply("Please specify a name!");
 
-composer.command("add", async (ctx) => {
-    await ctx.conversation.enter("add_med_conversation");
+    add_med(name, ctx.chat.id);
+
+    return ctx.reply("Added!");
 });
-
-export async function add_med_conversation(conversation: MyConversation, ctx: MyContext) {
-    await ctx.reply("Tell a name:");
-    const {message} = await conversation.wait();
-
-    await ctx.reply("Choose days:", {reply_markup: weekdays});
-
-    if (ctx.chat !== undefined && message !== undefined && message.text !== undefined) {
-        add_med(message.text, ctx.chat.id);
-        return ctx.reply("Added!");
-    }
-
-    return;
-}
 
 export default composer;
