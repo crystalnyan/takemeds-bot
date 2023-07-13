@@ -20,3 +20,11 @@ export function add_med(name: string, chat_id: number) {
 export function get_meds_rows(chat_id: number) {
     return db.query(`SELECT * FROM meds WHERE chat_id = ?`, [chat_id]);
 }
+
+export function delete_med_row(name: string, chat_id: number) {
+    db.query(`
+    DELETE FROM meds 
+    WHERE name=(?)
+    AND chat_id=(?)
+    `, [name, chat_id]);
+}

@@ -1,4 +1,4 @@
-import { get_meds_rows } from "../database/db.ts";
+import {delete_med_row, get_meds_rows} from "../database/db.ts";
 
 export type Meds = {
     id: number;
@@ -17,6 +17,16 @@ export function view_meds(chat_id: number) {
     }
 
     return meds_list_msg;
+}
+
+export function delete_med(at: number, chat_id: number) {
+    const rows = get_meds(chat_id);
+
+    if (at > rows.length) return;
+
+    const med = rows[at - 1];
+
+    delete_med_row(med.name, chat_id);
 }
 
 function get_meds(chat_id: number): Meds[] {
