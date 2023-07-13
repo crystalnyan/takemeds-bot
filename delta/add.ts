@@ -20,7 +20,6 @@ composer.command("add", (ctx) => {
     }
 
     const cron = `${minute} ${hour} ${day} * ${weekday}`;
-    console.log(cron);
 
     add_med(name, ctx.chat.id);
     schedule(ctx, name, cron);
