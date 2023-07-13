@@ -6,10 +6,20 @@ export type Meds = {
     chat_id: number;
 }
 
-export function get_meds(chat_id: number): Meds[] {
+export function view_meds(chat_id: number) {
+    let meds_list_msg = "";
+    const rows = get_meds(chat_id);
+    for (const med of rows) {
+        meds_list_msg = meds_list_msg.concat(to_string(med) + "\n");
+    }
+
+    return meds_list_msg;
+}
+
+function get_meds(chat_id: number): Meds[] {
     const rows = get_meds_rows(chat_id);
 
-    let meds: Meds[] = [];
+    const meds: Meds[] = [];
     for (const [id, name, chat_id] of rows) {
         meds.push(<Meds>{id, name, chat_id});
     }
@@ -17,6 +27,6 @@ export function get_meds(chat_id: number): Meds[] {
     return meds;
 }
 
-export function to_string(med: Meds) {
+function to_string(med: Meds) {
     return med.name;
 }
