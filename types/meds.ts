@@ -9,8 +9,11 @@ export type Meds = {
 export function view_meds(chat_id: number) {
     let meds_list_msg = "";
     const rows = get_meds(chat_id);
+
+    let count = 1;
     for (const med of rows) {
-        meds_list_msg = meds_list_msg.concat(to_string(med) + "\n");
+        meds_list_msg = meds_list_msg.concat(count + ". " + to_string(med) + "\n");
+        count += 1;
     }
 
     return meds_list_msg;
