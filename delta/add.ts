@@ -4,7 +4,7 @@ import {schedule} from "../cron.ts";
 
 const composer = new Composer();
 
-composer.command("add", async (ctx) => {
+composer.command("add", (ctx) => {
     const inputs = extract_inputs(ctx.match);
 
     if (!inputs.name) return ctx.reply("Please specify a name!");
