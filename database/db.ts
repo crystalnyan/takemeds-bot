@@ -22,6 +22,10 @@ export function get_meds_rows(chat_id: number) {
     return db.query(`SELECT * FROM meds WHERE chat_id = ?`, [chat_id]);
 }
 
+export function get_all_meds_rows() {
+    return db.query(`SELECT * FROM meds`);
+}
+
 export function delete_med_row(id: number) {
     db.query(`
     DELETE FROM meds 
