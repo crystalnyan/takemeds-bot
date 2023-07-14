@@ -5,8 +5,7 @@ import {Meds} from "./types/meds.ts";
 
 export function load_crons() {
     new Cron(
-        "*/1 * * * *",
-        {maxRuns : 1},
+        "*/30 * * * *",
         () => {
             schedule_all();
         });
@@ -15,6 +14,7 @@ export function load_crons() {
 export function schedule(chat_id: number, name: string, cron: string) {
     new Cron(
         cron,
+        {maxRuns : 1},
         () => {
             bot.api.sendMessage(chat_id,`You should take ${name} now!`);
         });
