@@ -16,7 +16,7 @@ composer.command("add", async (ctx) => {
     const cron = `${inputs.minute} ${inputs.hour} ${inputs.day} * ${inputs.weekday}`;
 
     add_med(inputs.name, ctx.chat.id, cron);
-    schedule(ctx, inputs.name, cron);
+    schedule(ctx.chat.id, inputs.name, cron);
 
     return ctx.reply("Added!");
 });
