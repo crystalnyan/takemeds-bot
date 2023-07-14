@@ -1,5 +1,5 @@
 import { Composer} from "../deps.ts";
-import { add_med } from "../database/db.ts";
+import { add_med } from "../types/meds.ts";
 import {schedule} from "../cron.ts";
 
 const composer = new Composer();

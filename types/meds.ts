@@ -1,9 +1,13 @@
-import {delete_med_row, get_meds_rows} from "../database/db.ts";
+import {delete_med_row, get_meds_rows, add_med_row} from "../database/db.ts";
 
 export type Meds = {
     id: number;
     name: string;
     chat_id: number;
+}
+
+export function add_med(name: string, chat_id: number) {
+    add_med_row(name, chat_id);
 }
 
 export function view_meds(chat_id: number) {

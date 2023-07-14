@@ -12,7 +12,7 @@ export function create_meds_table() {
 `);
 }
 
-export function add_med(name: string, chat_id: number) {
+export function add_med_row(name: string, chat_id: number) {
     db.query(
         `INSERT INTO meds (name, chat_id) VALUES (?, ?)`, [name, chat_id]);
 }
