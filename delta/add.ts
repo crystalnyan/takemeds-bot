@@ -5,26 +5,32 @@ import {schedule} from "../cron.ts";
 const composer = new Composer();
 
 composer.command("add", (ctx) => {
-    const input = ctx.match.split(" ");
+    const inputs = extract_inputs(ctx.match);
 
-    const name = input[0];
-    if (!name) return ctx.reply("Please specify a name!");
+    if (!inputs.name) return ctx.reply("Please specify a name!");
 
-    const hour = input[1];
-    const minute = input[2];
-    const day = input[3];
-    const weekday = input[4];
-
-    if (!hour || !minute || !day || !weekday) {
+    if (!inputs.hour || !inputs.minute || !inputs.day || !inputs.weekday) {
         return ctx.reply("Please specify schedule properly! Run /help for more info.");
     }
 
-    const cron = `${minute} ${hour} ${day} * ${weekday}`;
+    const cron = `${inputs.minute} ${inputs.hour} ${inputs.day} * ${inputs.weekday}`;
 
-    add_med(name, ctx.chat.id);
-    schedule(ctx, name, cron);
+    add_med(inputs.name, ctx.chat.id);
+    schedule(ctx, inputs.name, cron);
 
     return ctx.reply("Added!");
 });
+
+function extract_inputs(input: string) {
+    const inputs = input.split(" ");
+
+    const name = inputs[0];
+    const hour = inputs[1];
+    const minute = inputs[2];
+    const day = inputs[3];
+    const weekday = inputs[4];
+
+    return {name, hour, minute, day, weekday};
+}
 
 export default composer;
