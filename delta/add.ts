@@ -1,6 +1,6 @@
 import { Composer} from "../deps.ts";
 import { add_med } from "../types/meds.ts";
-import {schedule, write_cron_to_file} from "../cron.ts";
+import {schedule} from "../cron.ts";
 
 const composer = new Composer();
 
@@ -15,8 +15,7 @@ composer.command("add", async (ctx) => {
 
     const cron = `${inputs.minute} ${inputs.hour} ${inputs.day} * ${inputs.weekday}`;
 
-    add_med(inputs.name, ctx.chat.id);
-    await write_cron_to_file(inputs.name, cron);
+    add_med(inputs.name, ctx.chat.id, cron);
     schedule(ctx, inputs.name, cron);
 
     return ctx.reply("Added!");
