@@ -10,7 +10,7 @@ composer.command("add", (ctx) => {
     if (!inputs.name) return ctx.reply("Please specify a name!");
 
     if (!inputs.hour || !inputs.minute || !inputs.day || !inputs.weekday) {
-        return ctx.reply("Please specify schedule properly! Run /help for more info.");
+        return ctx.reply("Please specify schedule properly!\nRun /help for more info.");
     }
 
     const cron = `${inputs.minute} ${inputs.hour} ${inputs.day} * ${inputs.weekday}`;
