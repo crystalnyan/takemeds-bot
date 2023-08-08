@@ -1,4 +1,5 @@
 import {delete_med_row, get_meds_rows, add_med_row} from "../database/db.ts";
+import {remove_cron} from "../cron.ts";
 
 export type Meds = {
     id: number;
@@ -32,6 +33,7 @@ export function delete_med(at: number, chat_id: number) {
     const med = rows[at - 1];
 
     delete_med_row(med.id);
+    remove_cron(med.name + med.cron + med.chat_id);
 }
 
 function get_meds(chat_id: number): Meds[] {

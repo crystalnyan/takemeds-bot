@@ -5,7 +5,8 @@ import {Meds} from "./types/meds.ts";
 
 export function load_crons() {
     new Cron(
-        "*/30 * * * *",
+        "* * * * *",
+        {maxRuns: 1},
         () => {
             schedule_all();
         });
@@ -14,10 +15,15 @@ export function load_crons() {
 export function schedule(chat_id: number, name: string, cron: string) {
     new Cron(
         cron,
-        {maxRuns : 1},
+        {name: name + cron + chat_id},
         () => {
             bot.api.sendMessage(chat_id,`You should take ${name} now!`);
         });
+}
+
+export function remove_cron(name: string) {
+    const job = Cron.scheduledJobs.find(j => j.name === name);
+    if ( job !== undefined ) job.stop();
 }
 
 function schedule_all() {
