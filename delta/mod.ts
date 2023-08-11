@@ -5,8 +5,8 @@ import add from "./add.ts";
 import view from "./view.ts";
 import delete_med from "./delete.ts";
 
-export default async (bot: Bot)=> {
-    await bot
+export default (bot: Bot)=> {
+    bot
         .use(start)
         .use(help)
         .use(add)

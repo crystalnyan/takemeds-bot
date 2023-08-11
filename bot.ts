@@ -4,8 +4,7 @@ import delta from "./delta/mod.ts";
 import {load_crons} from "./cron.ts";
 import {type Conversation,
   type ConversationFlavor,
-  conversations,
-  createConversation} from "./deps.ts";
+  conversations} from "./deps.ts";
 
 const env = await load();
 const token = env["BOT_TOKEN"];
@@ -18,7 +17,7 @@ export const bot = new Bot<MyContext>(token);
 bot.use(session({ initial: () => ({}) }));
 bot.use(conversations());
 
-await delta(bot);
+delta(bot);
 
 create_meds_table();
 load_crons();
@@ -31,4 +30,4 @@ await bot.api.setMyCommands([
     { command: "delete", description: "Delete a med" }
 ]);
 
-bot.start();
+await bot.start();

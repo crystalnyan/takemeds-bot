@@ -7,12 +7,12 @@ export const message =
 
 const keyboard = new Keyboard()
     .text("Add a medication 💊").row()
-    .text("Veiw your meds").row()
+    .text("View your meds").row()
     .text("Help")
     .resized();
 
-composer.command("start", (ctx) => {
-    ctx.reply(message, {
+composer.command("start", async (ctx) => {
+    await ctx.reply(message, {
         reply_markup: keyboard
     });
 });

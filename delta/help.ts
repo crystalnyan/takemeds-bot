@@ -18,8 +18,8 @@ export const message =
     "\nbe restricted by specified weekdays" +
     "\n\"*/3\" means each third minute/hour/day/month";
 
-composer.command("help", (ctx) => {
-    ctx.reply(message);
+composer.command("help", async (ctx) => {
+    return await ctx.reply(message);
 });
 
 export default composer;

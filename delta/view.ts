@@ -9,7 +9,7 @@ composer.command("view", async (ctx) => {
     const meds = view_meds(ctx.chat.id);
 
     if (meds.length == 0) return ctx.reply("You don't have any meds added!");
-    return ctx.reply(meds);
+    return await ctx.reply(meds);
 });
 
 export default composer;
