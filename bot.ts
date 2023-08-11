@@ -1,4 +1,4 @@
-import {Bot, Context, load, session} from "./deps.ts";
+import {Bot, Context, createConversation, load, session} from "./deps.ts";
 import { create_meds_table } from "./database/db.ts";
 import delta from "./delta/mod.ts";
 import {load_crons} from "./cron.ts";
@@ -32,5 +32,18 @@ await bot.api.setMyCommands([
     { command: "view", description: "View all my meds" },
     { command: "delete", description: "Delete a med" }
 ]);
+
+async function add(conversation: MyConversation, ctx: MyContext) {
+    await ctx.reply("Type the name for new medication:");
+    const name = await conversation.form.text();
+    await ctx.reply(name);
+}
+
+// @ts-ignore working, taken from https://grammy.dev/plugins/conversations, still Deno complains
+bot.use(createConversation(add));
+
+bot.hears("Add a medication 💊",  async (ctx) => {
+    await ctx.conversation.enter("add");
+})
 
 await bot.start();
