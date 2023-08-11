@@ -10,13 +10,16 @@ const env = await load();
 const token = env["BOT_TOKEN"];
 
 type MyContext = Context & ConversationFlavor;
+// @ts-ignore working, taken from https://grammy.dev/plugins/conversations, still Deno complains
 type MyConversation = Conversation<MyContext>;
 
 export const bot = new Bot<MyContext>(token);
 
 bot.use(session({ initial: () => ({}) }));
+// @ts-ignore working, taken from https://grammy.dev/plugins/conversations, still Deno complains
 bot.use(conversations());
 
+// @ts-ignore working, taken from https://grammy.dev/plugins/conversations, still Deno complains
 delta(bot);
 
 create_meds_table();
