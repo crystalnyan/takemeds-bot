@@ -75,6 +75,7 @@ export function add_callbacks() {
     })
 
     bot.callbackQuery("weekdays", async (ctx) => {
+        weekdays = [0,0,0,0,0,0,0,0];
         await ctx.reply("Choose weekdays:", {
             reply_markup: weekdays_kb
         })

@@ -13,12 +13,14 @@ export function load_crons() {
 }
 
 export function schedule(chat_id: number, name: string, cron: string) {
-    new Cron(
-        cron,
-        {name: name + cron + chat_id},
-        () => {
-            bot.api.sendMessage(chat_id,`You should take ${name} now!`);
-        });
+    try {
+        new Cron(
+            cron,
+            {name: name + cron + chat_id},
+            () => {
+                bot.api.sendMessage(chat_id,`You should take ${name} now!`);
+            });
+    } catch (err) { return; }
 }
 
 export function remove_cron(name: string) {
