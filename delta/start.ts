@@ -5,7 +5,7 @@ const composer = new Composer();
 export const message =
     "Welcome, everynyan~ \nI'm a bot that reminds you to take your meds.";
 
-const keyboard = new Keyboard()
+export const keyboard = new Keyboard()
     .text("Add a medication 💊").row()
     .text("View your meds").row()
     .text("Help")

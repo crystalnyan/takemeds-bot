@@ -1,4 +1,4 @@
 .env
 .idea
 db.sqlite3
-cron.txt
+pusher.sh
