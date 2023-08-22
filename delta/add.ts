@@ -6,10 +6,12 @@ import { MyContext, MyConversation, bot } from "../bot.ts";
 const composer = new Composer();
 
 let selected_hour, selected_minutes;
+let med_name: string;
+let weekdays = [0,0,0,0,0,0,0];
 
 async function add(conversation: MyConversation, ctx: MyContext) {
     await ctx.reply("Type the name for new medication:");
-    const name = await conversation.form.text();
+    med_name = await conversation.form.text();
 
     const time_keyboard = new InlineKeyboard()
     .text("Hour 0-23").row()
@@ -67,7 +69,7 @@ export function add_callbacks() {
     bot.callbackQuery("select_time", async (ctx) => {
         selected_hour = ctx.callbackQuery.message?.reply_markup?.inline_keyboard[1][1].text;
         selected_minutes = ctx.callbackQuery.message?.reply_markup?.inline_keyboard[3][1].text;
-        //await ctx.reply("Selected hour: " + hour + " minutes: " + minutes );
+        await ctx.reply("Selected hour: " + selected_hour + " minutes: " + selected_minutes );
 
         const days = new InlineKeyboard()
             .text("Weekdays", "weekdays").row()
@@ -76,6 +78,26 @@ export function add_callbacks() {
         await ctx.reply("Choose to remind on specific weekdays or days of a month?", {
             reply_markup: days
         })
+    })
+
+    bot.callbackQuery("weekdays", async (ctx) => {
+        const weekdays = new InlineKeyboard()
+            .text("Monday", "mon").row()
+            .text("Tuesday", "tue").row()
+            .text("Wednesday", "wed").row()
+            .text("Thursday", "thu").row()
+            .text("Friday", "fri").row()
+            .text("Saturday", "sat").row()
+            .text("Sunday", "sun").row()
+            .text("Select", "select_weekdays");
+
+        await ctx.reply("Choose weekdays:", {
+            reply_markup: weekdays
+        })
+    })
+
+    bot.callbackQuery("mon", async (ctx) => {
+        await change_weekdays(ctx, 1);
     })
 }
 
@@ -86,6 +108,28 @@ enum TimeChangeArgs {
     Down = "DOWN",
     Hour = "HOUR",
     Minutes = "MINUTES"
+}
+
+async function change_weekdays(ctx: MyContext, index: number) {
+    if (weekdays[index] == 0 ) {
+            weekdays[index] =1;
+            // @ts-ignore working, Deno complains
+            ctx.callbackQuery.message.reply_markup.inline_keyboard[0][index - 1].text = ctx.callbackQuery.message?.reply_markup?.inline_keyboard[0][0].text + "✅";
+            try {
+                await ctx.editMessageReplyMarkup({
+                    // @ts-ignore working, Deno complains
+                    reply_markup: ctx.callbackQuery.message.reply_markup})
+            } catch (err) {}
+    } else {
+        weekdays[index] = 0;
+        // @ts-ignore working, Deno complains
+            ctx.callbackQuery.message.reply_markup.inline_keyboard[0][index - 1].text = ctx.callbackQuery.message?.reply_markup?.inline_keyboard[0][0].text.replace("✅", "");
+            try {
+                await ctx.editMessageReplyMarkup({
+                    // @ts-ignore working, Deno complains
+                    reply_markup: ctx.callbackQuery.message.reply_markup})
+            } catch (err) {}
+    }
 }
 
 async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArgs]) {
@@ -113,7 +157,6 @@ async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArg
                     break;
             }
 
-            console.log("CURRENT:" + current_value + " NEW: " + new_value);
             // @ts-ignore working, Deno complains
             ctx.callbackQuery.message.reply_markup.inline_keyboard[1][1].text = new_value;
             break;
@@ -144,47 +187,9 @@ async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArg
             break;
     }
 
-    if (isOkContext(ctx)) {
-        try {
-            await ctx.editMessageReplyMarkup({
-                // @ts-ignore working, Deno complains
-                reply_markup: ctx.callbackQuery.message.reply_markup})
-        } catch (err) {}
-    }
+    try {
+        await ctx.editMessageReplyMarkup({
+            // @ts-ignore working, Deno complains
+            reply_markup: ctx.callbackQuery.message.reply_markup})
+    } catch (err) {}
 }
-
-function isOkContext(ctx: MyContext) {
-    return ctx.callbackQuery != undefined &&
-        ctx.callbackQuery.message != undefined &&
-        ctx.callbackQuery.message.reply_markup != undefined
-}
-
-/*
-composer.command("add", async (ctx) => {
-    const inputs = extract_inputs(ctx.match);
-
-    if (!inputs.name) return ctx.reply("Please specify a name!");
-
-    if (!inputs.hour || !inputs.minute || !inputs.day || !inputs.weekday) {
-        return ctx.reply("Please specify schedule properly!\nRun /help for more info.");
-    }
-
-    const cron = `${inputs.minute} ${inputs.hour} ${inputs.day} * ${inputs.weekday}`;
-
-    add_med(inputs.name, ctx.chat.id, cron);
-    schedule(ctx.chat.id, inputs.name, cron);
-
-    return await ctx.reply("Added!");
-});
-
-function extract_inputs(input: string) {
-    const inputs = input.split(" ");
-
-    const name = inputs[0];
-    const hour = inputs[1];
-    const minute = inputs[2];
-    const day = inputs[3];
-    const weekday = inputs[4];
-
-    return {name, hour, minute, day, weekday};
-}*/
