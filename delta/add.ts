@@ -104,7 +104,9 @@ export function add_callbacks() {
 
         if (ctx.chat == undefined) return;
         add_med(med_name, ctx.chat.id, cron);
-        schedule(ctx.chat.id, med_name, cron);
+        try {
+            schedule(ctx.chat.id, med_name, cron);
+        } catch (err) { return; }
 
         return await ctx.reply("Added!", {
             reply_markup: keyboard
