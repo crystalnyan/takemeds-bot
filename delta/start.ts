@@ -9,7 +9,8 @@ const keyboard = new Keyboard()
     .text("Add a medication 💊").row()
     .text("View your meds").row()
     .text("Help")
-    .resized();
+    .resized()
+    .oneTime();
 
 composer.command("start", async (ctx) => {
     await ctx.reply(message, {
