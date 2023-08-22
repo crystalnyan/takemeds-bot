@@ -5,15 +5,17 @@ import { MyContext, MyConversation, bot } from "../bot.ts";
 
 const composer = new Composer();
 
+let selected_hour, selected_minutes;
+
 async function add(conversation: MyConversation, ctx: MyContext) {
     await ctx.reply("Type the name for new medication:");
     const name = await conversation.form.text();
 
     const time_keyboard = new InlineKeyboard()
     .text("Hour 0-23").row()
-    .text("➖", "hour_down").text("0").text("➕", "hour_up").row()
+    .text("➖", "hour_down").text("12").text("➕", "hour_up").row()
     .text("Minutes 0-59").row()
-    .text("➖", "minute_down").text("0").text("➕", "minute_down").row()
+    .text("➖", "minute_down").text("0").text("➕", "minute_up").row()
     .text("Select", "select_time");
 
     await ctx.reply("Choose time for reminders:", {
@@ -47,27 +49,24 @@ export function add_med_convo() {
 
 export function add_callbacks() {
     bot.callbackQuery("hour_up", async (ctx) => {
-        const hour = ctx.callbackQuery.message?.reply_markup?.inline_keyboard[1][1].text;
+        await change_time(ctx, [TimeChangeArgs.Hour, TimeChangeArgs.Up]);
+    })
 
-        if (hour == undefined) return;
+    bot.callbackQuery("hour_down", async (ctx) => {
+        await change_time(ctx, [TimeChangeArgs.Hour, TimeChangeArgs.Down]);
+    })
 
-        const new_hour = (+hour + 1).toString();
+    bot.callbackQuery("minute_up", async (ctx) => {
+        await change_time(ctx, [TimeChangeArgs.Minutes, TimeChangeArgs.Up]);
+    })
 
-        if (ctx.callbackQuery.message == undefined) return;
-        if (ctx.callbackQuery.message.reply_markup == undefined) return;
-
-        console.log(ctx.callbackQuery.message.reply_markup)
-
-         ctx.callbackQuery.message.reply_markup.inline_keyboard[1][1].text = new_hour;
-
-        await ctx.editMessageReplyMarkup({
-            reply_markup: ctx.callbackQuery.message.reply_markup
-        })
+    bot.callbackQuery("minute_down", async (ctx) => {
+        await change_time(ctx, [TimeChangeArgs.Minutes, TimeChangeArgs.Down]);
     })
 
     bot.callbackQuery("select_time", async (ctx) => {
-        const hour = ctx.callbackQuery.message?.reply_markup?.inline_keyboard[1][1].text;
-        const minutes = ctx.callbackQuery.message?.reply_markup?.inline_keyboard[3][1].text;
+        selected_hour = ctx.callbackQuery.message?.reply_markup?.inline_keyboard[1][1].text;
+        selected_minutes = ctx.callbackQuery.message?.reply_markup?.inline_keyboard[3][1].text;
         //await ctx.reply("Selected hour: " + hour + " minutes: " + minutes );
 
         const days = new InlineKeyboard()
@@ -81,6 +80,84 @@ export function add_callbacks() {
 }
 
 export default composer
+
+enum TimeChangeArgs {
+    Up = "UP",
+    Down = "DOWN",
+    Hour = "HOUR",
+    Minutes = "MINUTES"
+}
+
+async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArgs]) {
+    let current_value, new_value;
+    const [value, operation] = args;
+    switch (value) {
+        case "HOUR":
+            current_value = ctx.callbackQuery?.message?.reply_markup?.inline_keyboard[1][1].text;
+            if (current_value == undefined) return;
+
+            switch (operation){
+                case "UP":
+                    if (current_value == "23") {
+                        new_value = "0";
+                    } else {
+                        new_value = (+current_value + 1).toString();
+                    }
+                    break;
+                case "DOWN":
+                    if (current_value == "0") {
+                        new_value = "23";
+                    } else {
+                        new_value = (+current_value - 1).toString();
+                    }
+                    break;
+            }
+
+            console.log("CURRENT:" + current_value + " NEW: " + new_value);
+            // @ts-ignore working, Deno complains
+            ctx.callbackQuery.message.reply_markup.inline_keyboard[1][1].text = new_value;
+            break;
+
+        case "MINUTES":
+            current_value = ctx.callbackQuery?.message?.reply_markup?.inline_keyboard[3][1].text;
+            if (current_value == undefined) return;
+
+            switch (operation){
+                case "UP":
+                    if (current_value == "55") {
+                        new_value = "0";
+                    } else {
+                        new_value = (+current_value + 5).toString();
+                    }
+                    break;
+                case "DOWN":
+                    if (current_value == "0") {
+                        new_value = "55"
+                    } else {
+                        new_value = (+current_value - 5).toString();
+                    }
+                    break;
+            }
+
+            // @ts-ignore working, Deno complains
+            ctx.callbackQuery.message.reply_markup.inline_keyboard[3][1].text = new_value;
+            break;
+    }
+
+    if (isOkContext(ctx)) {
+        try {
+            await ctx.editMessageReplyMarkup({
+                // @ts-ignore working, Deno complains
+                reply_markup: ctx.callbackQuery.message.reply_markup})
+        } catch (err) {}
+    }
+}
+
+function isOkContext(ctx: MyContext) {
+    return ctx.callbackQuery != undefined &&
+        ctx.callbackQuery.message != undefined &&
+        ctx.callbackQuery.message.reply_markup != undefined
+}
 
 /*
 composer.command("add", async (ctx) => {
