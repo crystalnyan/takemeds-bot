@@ -1,10 +1,8 @@
-import {Composer, InlineKeyboard, createConversation} from "../deps.ts";
+import {InlineKeyboard, createConversation} from "../deps.ts";
 import { add_med } from "../types/meds.ts";
 import {schedule} from "../cron.ts";
 import { MyContext, MyConversation, bot } from "../bot.ts";
 import { keyboard } from "./start.ts";
-
-const composer = new Composer();
 
 const weekdays_kb = new InlineKeyboard()
             .text("Monday", "mon").row()
@@ -135,8 +133,6 @@ export function add_callbacks() {
         await change_weekdays(ctx, 7);
     })
 }
-
-export default composer
 
 enum TimeChangeArgs {
     Up = "UP",
