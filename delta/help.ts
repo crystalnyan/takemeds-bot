@@ -1,25 +1,18 @@
-import { Composer } from "../deps.ts";
+import { bot } from "../bot.ts";
+import {keyboard} from "./start.ts";
 
-const composer = new Composer();
+export const help =
+    "Use /start to restart the bot if any problem occurred.\n\n" +
+    "You can add, view, delete, and edit your med reminders.\n\n" +
+    "To remind you about taking a med the bot will send you a message,\n" +
+    "so, please, unmute it for best experience.\n\n" +
+    "You can file an issue on GitHub repo:\n" +
+    "https://github.com/crystalnyan/takemeds-bot";
 
-export const message =
-    "Use these commands to:" +
-    "\n\n/add - Add a new med" +
-    "\n/view - View all my meds" +
-    "\n/delete - Delete a med" +
-    "\n\nHow to pass schedule information" +
-    "\nwhen you are adding a new med:" +
-    "\n/add <name> <hour> <minute> <day> <weekday>" +
-    "\n\nExample:" +
-    "\n/add Aspirin 12 30 * 1" +
-    "\n\nThis will schedule Aspirin to be taken" +
-    "\nat 12:30 every Monday." +
-    "\n\nNote:\n\"*\" means every. However, days may later" +
-    "\nbe restricted by specified weekdays" +
-    "\n\"*/3\" means each third minute/hour/day/month";
-
-composer.command("help", async (ctx) => {
-    return await ctx.reply(message);
-});
-
-export default composer;
+export function help_callbacks() {
+    bot.hears("Help", async (ctx) => {
+        await ctx.reply(help, {
+            reply_markup: keyboard
+        });
+    })
+}
