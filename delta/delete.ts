@@ -1,5 +1,5 @@
 import { Composer} from "../deps.ts";
-import {delete_med} from "../types/meds.ts";
+import {delete_med} from "../types/med.ts";
 
 const composer = new Composer();
 

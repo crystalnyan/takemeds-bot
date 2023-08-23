@@ -1,5 +1,5 @@
 import {InlineKeyboard, createConversation} from "../deps.ts";
-import { add_med } from "../types/meds.ts";
+import { add_med } from "../types/med.ts";
 import {schedule} from "../cron.ts";
 import { MyContext, MyConversation, bot } from "../bot.ts";
 import { keyboard } from "./start.ts";

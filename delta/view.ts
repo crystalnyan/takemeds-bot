@@ -1,5 +1,5 @@
 import { bot } from "../bot.ts";
-import {view_meds} from "../types/meds.ts";
+import {view_meds} from "../types/med.ts";
 import {keyboard} from "./start.ts";
 
 export function view_callbacks() {

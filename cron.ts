@@ -1,7 +1,7 @@
 import {Cron} from "./deps.ts";
 import {get_all_meds_rows} from "./database/db.ts";
 import {bot} from "./bot.ts";
-import {Meds} from "./types/meds.ts";
+import {Med} from "./types/med.ts";
 
 export function load_crons() {
     new Cron(
@@ -32,7 +32,7 @@ function schedule_all() {
         const rows = get_all_meds_rows();
 
         for (const [_id, name, chat_id, cron] of rows) {
-            const med = <Meds>{name, chat_id, cron};
+            const med = <Med>{name, chat_id, cron};
             schedule(med.chat_id, med.name, med.cron);
         }
 }
