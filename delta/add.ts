@@ -14,7 +14,7 @@ const weekdays_kb = new InlineKeyboard()
             .text("Sunday", "sun").row()
             .text("Select", "select_weekdays");
 
-let selected_hour: string|undefined, selected_minutes: string|undefined;
+let selected_hour: string|undefined, selected_minutes: string |undefined;
 let med_name: string;
 let weekdays = [0,0,0,0,0,0,0,0];
 
@@ -26,7 +26,7 @@ async function add(conversation: MyConversation, ctx: MyContext) {
     .text("Hour 0-23").row()
     .text("➖", "hour_down").text("12").text("➕", "hour_up").row()
     .text("Minutes 0-59").row()
-    .text("➖", "minute_down").text("0").text("➕", "minute_up").row()
+    .text("➖", "minute_down").text("00").text("➕", "minute_up").row()
     .text("Select", "select_time");
 
     await ctx.reply("Choose time for reminders:", {
@@ -169,7 +169,7 @@ async function change_weekdays(ctx: MyContext, index: number) {
 }
 
 async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArgs]) {
-    let current_value, new_value;
+    let current_value, new_value = "";
     const [value, operation] = args;
     switch (value) {
         case "HOUR":
@@ -179,13 +179,13 @@ async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArg
             switch (operation){
                 case "UP":
                     if (current_value == "23") {
-                        new_value = "0";
+                        new_value = "00";
                     } else {
                         new_value = (+current_value + 1).toString();
                     }
                     break;
                 case "DOWN":
-                    if (current_value == "0") {
+                    if (current_value == "00") {
                         new_value = "23";
                     } else {
                         new_value = (+current_value - 1).toString();
@@ -193,6 +193,7 @@ async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArg
                     break;
             }
 
+            if (new_value?.length == 1) new_value = "0" + new_value;
             // @ts-ignore working, Deno complains
             ctx.callbackQuery.message.reply_markup.inline_keyboard[1][1].text = new_value;
             break;
@@ -204,13 +205,13 @@ async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArg
             switch (operation){
                 case "UP":
                     if (current_value == "55") {
-                        new_value = "0";
+                        new_value = "00";
                     } else {
                         new_value = (+current_value + 5).toString();
                     }
                     break;
                 case "DOWN":
-                    if (current_value == "0") {
+                    if (current_value == "00") {
                         new_value = "55"
                     } else {
                         new_value = (+current_value - 5).toString();
@@ -218,6 +219,7 @@ async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArg
                     break;
             }
 
+            if (new_value?.length == 1) new_value = "0" + new_value;
             // @ts-ignore working, Deno complains
             ctx.callbackQuery.message.reply_markup.inline_keyboard[3][1].text = new_value;
             break;
