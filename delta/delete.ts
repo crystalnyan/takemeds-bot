@@ -1,16 +1,40 @@
-import { Composer} from "../deps.ts";
-import {delete_med} from "../types/med.ts";
+import {delete_med, get_meds} from "../types/med.ts";
+import {MyContext, MyConversation, bot} from "../bot.ts";
+import {keyboard} from "./start.ts";
+import {createConversation} from "../deps.ts";
 
-const composer = new Composer();
+async function delete_convo(conversation: MyConversation, ctx: MyContext) {
+    await ctx.reply("Please type the index of the med to delete:");
+    let med_index = await conversation.form.number(async () =>
+        await ctx.reply("This isn't even a number...\nTry again:"));
 
-composer.command("delete", async (ctx) => {
-    const at = +ctx.match;
+    // @ts-ignore,
+    const rows = get_meds(ctx.chat.id);
 
-    if (!at) return ctx.reply("Please specify a number in your list of meds!");
+    while (!isValidIndex(med_index, rows.length)) {
+        await ctx.reply(`We don't have such an index...` +
+            `\nPlease, choose between 0 and ${rows.length}`);
 
-    delete_med(at, ctx.chat.id);
+        med_index = await conversation.form.number(async () =>
+        await ctx.reply("This isn't even a number...\nTry again:"));
+    }
 
-    return await ctx.reply("Removed!");
-});
+    // @ts-ignore,
+    delete_med(med_index, ctx.chat.id);
+    await ctx.reply("Deleted!", {
+        reply_markup: keyboard
+    })
+}
 
-export default composer;
+function isValidIndex(index: number, last: number) {
+    return index < last && index >= 1;
+}
+
+export function delete_med_convo() {
+    // @ts-ignore working, taken from https://grammy.dev/plugins/conversations, still Deno complains
+    bot.use(createConversation(delete_convo));
+
+    bot.hears("Delete a med", async (ctx) => {
+        await ctx.conversation.enter("delete_convo");
+    })
+}
