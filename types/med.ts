@@ -28,15 +28,13 @@ export function view_meds(chat_id: number) {
 export function delete_med(at: number, chat_id: number) {
     const rows = get_meds(chat_id);
 
-    if (at > rows.length) return;
-
     const med = rows[at - 1];
 
     delete_med_row(med.id);
     remove_cron(med.name + med.cron + med.chat_id);
 }
 
-function get_meds(chat_id: number): Med[] {
+export function get_meds(chat_id: number): Med[] {
     const rows = get_meds_rows(chat_id);
 
     const meds: Med[] = [];
