@@ -1,4 +1,4 @@
-import {Bot, Context, createConversation, load, session} from "./deps.ts";
+import {Bot, Context, load, session} from "./deps.ts";
 import { create_meds_table } from "./database/db.ts";
 import delta from "./delta/mod.ts";
 import {load_crons} from "./cron.ts";
