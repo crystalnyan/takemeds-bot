@@ -99,7 +99,6 @@ export function add_callbacks() {
         }
 
         const cron = `${selected_minutes} ${selected_hour} * * ${selected_weekdays}`;
-        console.log(cron);
 
         if (ctx.chat == undefined) return;
         add_med(med_name, ctx.chat.id, cron);
