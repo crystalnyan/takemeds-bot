@@ -13,7 +13,7 @@ async function delete_convo(conversation: MyConversation, ctx: MyContext) {
 
     while (!isValidIndex(med_index, rows.length)) {
         await ctx.reply(`We don't have such an index...` +
-            `\nPlease, choose between 0 and ${rows.length}`);
+            `\nPlease, choose between 1 and ${rows.length}`);
 
         med_index = await conversation.form.number(async () =>
         await ctx.reply("This isn't even a number...\nTry again:"));
