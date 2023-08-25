@@ -1,13 +1,6 @@
 import { bot } from "../bot.ts";
-import { Keyboard } from "../deps.ts";
+import { main_menu, meds_menu } from "../keyboards.ts";
 import {view_meds} from "../types/med.ts";
-import {keyboard} from "./start.ts";
-
-const meds_kb = new Keyboard()
-    .text("Delete a med").row()
-    .text("Continue")
-    .oneTime()
-    .resized();
 
 export function view_callbacks() {
     bot.hears("View your meds", async (ctx) => {
@@ -16,17 +9,17 @@ export function view_callbacks() {
         const meds = view_meds(ctx.chat.id);
 
         if (meds.length == 0) return ctx.reply("You don't have any meds added!", {
-            reply_markup: keyboard
+            reply_markup: main_menu
         });
 
         return await ctx.reply(meds, {
-            reply_markup: meds_kb
+            reply_markup: meds_menu
         });
     })
 
     bot.hears("Continue", async (ctx) =>{
         await ctx.reply("Anything else?", {
-            reply_markup: keyboard
+            reply_markup: main_menu
         })
     })
 }

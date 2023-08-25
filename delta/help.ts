@@ -1,5 +1,5 @@
 import { bot } from "../bot.ts";
-import {keyboard} from "./start.ts";
+import { main_menu } from "../keyboards.ts";
 
 export const help =
     "Use /start to restart the bot if any problem occurred.\n\n" +
@@ -12,7 +12,7 @@ export const help =
 export function help_callbacks() {
     bot.hears("Help", async (ctx) => {
         await ctx.reply(help, {
-            reply_markup: keyboard
+            reply_markup: main_menu
         });
     })
 }

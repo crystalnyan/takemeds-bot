@@ -1,7 +1,7 @@
 import {delete_med, get_meds} from "../types/med.ts";
 import {MyContext, MyConversation, bot} from "../bot.ts";
-import {keyboard} from "./start.ts";
 import {createConversation} from "../deps.ts";
+import { main_menu } from "../keyboards.ts";
 
 async function delete_convo(conversation: MyConversation, ctx: MyContext) {
     await ctx.reply("Please type the index of the med to delete:");
@@ -22,7 +22,7 @@ async function delete_convo(conversation: MyConversation, ctx: MyContext) {
     // @ts-ignore,
     delete_med(med_index, ctx.chat.id);
     await ctx.reply("Deleted!", {
-        reply_markup: keyboard
+        reply_markup: main_menu
     })
 }
 
