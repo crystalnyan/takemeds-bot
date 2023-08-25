@@ -5,14 +5,25 @@ import { MyContext, MyConversation, bot } from "../bot.ts";
 import { keyboard } from "./start.ts";
 
 const weekdays_kb = new InlineKeyboard()
-            .text("Monday", "mon").row()
-            .text("Tuesday", "tue").row()
-            .text("Wednesday", "wed").row()
-            .text("Thursday", "thu").row()
-            .text("Friday", "fri").row()
-            .text("Saturday", "sat").row()
-            .text("Sunday", "sun").row()
-            .text("Select", "select_weekdays");
+    .text("Monday", "mon").row()
+    .text("Tuesday", "tue").row()
+    .text("Wednesday", "wed").row()
+    .text("Thursday", "thu").row()
+    .text("Friday", "fri").row()
+    .text("Saturday", "sat").row()
+    .text("Sunday", "sun").row()
+    .text("Select", "select_weekdays");
+
+const type = new InlineKeyboard()
+    .text("Specified reminder", "weekdays").row()
+    .text("GPT-generated reminder", "gpt").row();
+
+const time_keyboard = new InlineKeyboard()
+    .text("Hour 0-23").row()
+    .text("➖", "hour_down").text("12").text("➕", "hour_up").row()
+    .text("Minutes 0-59").row()
+    .text("➖", "minute_down").text("00").text("➕", "minute_up").row()
+    .text("Select", "select_time");
 
 let selected_hour: string|undefined, selected_minutes: string |undefined;
 let med_name: string;
@@ -22,15 +33,12 @@ async function add(conversation: MyConversation, ctx: MyContext) {
     await ctx.reply("Type the name for new medication:");
     med_name = await conversation.form.text();
 
-    const time_keyboard = new InlineKeyboard()
-    .text("Hour 0-23").row()
-    .text("➖", "hour_down").text("12").text("➕", "hour_up").row()
-    .text("Minutes 0-59").row()
-    .text("➖", "minute_down").text("00").text("➕", "minute_up").row()
-    .text("Select", "select_time");
-
-    await ctx.reply("Choose time for reminders:", {
-        reply_markup: time_keyboard
+    await ctx.reply("Choose type of reminders:" +
+        "\n\nSpecified reminder: " +
+        "\nSpecify weekdays and exact time when reminder will be sent to you" +
+        "\n\nGPT-generated reminder: " +
+        "\nText the preferred schedule and GPT will try to infer it", {
+        reply_markup: type
     });
 }
 
@@ -65,20 +73,16 @@ export function add_callbacks() {
         selected_minutes = ctx.callbackQuery.message?.reply_markup?.inline_keyboard[3][1].text;
         await ctx.reply("Selected time " + selected_hour + ":" + selected_minutes );
 
-        const days = new InlineKeyboard()
-            .text("Weekdays", "weekdays").row()
-            .text("Month days", "month_days").row();
-
-        await ctx.reply("Choose to remind on specific weekdays or days of a month?", {
-            reply_markup: days
-        })
-    })
-
-    bot.callbackQuery("weekdays", async (ctx) => {
         weekdays = [0,0,0,0,0,0,0,0];
         await ctx.reply("Choose weekdays:", {
             reply_markup: weekdays_kb
         })
+    })
+
+    bot.callbackQuery("weekdays", async (ctx) => {
+        await ctx.reply("Choose time for reminders:", {
+            reply_markup: time_keyboard
+        });
     })
 
     bot.callbackQuery("select_weekdays", async (ctx) => {
