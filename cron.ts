@@ -18,9 +18,15 @@ export function schedule(chat_id: number, name: string, cron: string) {
             cron,
             {name: name + cron + chat_id},
             () => {
-                bot.api.sendMessage(chat_id,`You should take ${name} now!`);
+                const message = "\*" + "Reminder❗*" + `\n\nYou should take ${name} now`;
+                bot.api.sendMessage(chat_id, message, {
+                    parse_mode: "MarkdownV2"
+                });
             });
-    } catch (err) { return; }
+    } catch (err) {
+        console.log(err);
+        return bot.api.sendMessage(chat_id,"Error in scheduling");
+    }
 }
 
 export function remove_cron(name: string) {
