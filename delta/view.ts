@@ -1,4 +1,4 @@
-import { bot } from "../bot.ts";
+import { bot } from "../init.ts";
 import { main_menu, meds_menu } from "../keyboards.ts";
 import {view_meds} from "../types/med.ts";
 

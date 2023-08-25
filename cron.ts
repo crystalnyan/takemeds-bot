@@ -1,6 +1,6 @@
 import {Cron} from "./deps.ts";
 import {get_all_meds_rows} from "./database/db.ts";
-import {bot} from "./bot.ts";
+import {bot} from "./init.ts";
 import {Med} from "./types/med.ts";
 
 export function load_crons() {

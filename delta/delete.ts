@@ -1,5 +1,5 @@
 import {delete_med, get_meds} from "../types/med.ts";
-import {MyContext, MyConversation, bot} from "../bot.ts";
+import {MyContext, MyConversation, bot} from "../init.ts";
 import {createConversation} from "../deps.ts";
 import { main_menu } from "../keyboards.ts";
 

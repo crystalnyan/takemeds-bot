@@ -1,4 +1,4 @@
-import { bot } from "../bot.ts";
+import { bot } from "../init.ts";
 import { main_menu } from "../keyboards.ts";
 
 export const help =
