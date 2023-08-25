@@ -3,7 +3,7 @@
 
 import { load_crons } from "./cron.ts";
 import { create_meds_table } from "./database/db.ts";
-import { Bot, Context, Conversation, ConversationFlavor, conversations, load, session } from "./deps.ts";
+import {Bot, Context, Conversation, ConversationFlavor, conversations, load, OpenAI, session} from "./deps.ts";
 import delta from "./delta/mod.ts";
 
 const env = await load();
@@ -11,9 +11,10 @@ export const token = env["BOT_TOKEN"];
 export const api_key = env["API_KEY"];
 
 export type MyContext = Context & ConversationFlavor;
-export type MyConversation = Conversation<MyContext>;
+export type MyConversation = Conversation<MyContext>;2
 
 export const bot = new Bot<MyContext>(token);
+export const openAI = new OpenAI(api_key);
 
 export function init() {
     bot.use(session({ initial: () => ({}) }));

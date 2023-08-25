@@ -1,8 +1,9 @@
 import {createConversation} from "../deps.ts";
 import { add_med } from "../types/med.ts";
 import {schedule} from "../cron.ts";
-import { MyContext, MyConversation, bot } from "../bot.ts";
+import { MyContext, MyConversation, bot } from "../init.ts";
 import { main_menu, time_choice, reminder_type_choice, weekdays_choice } from "../keyboards.ts";
+import {generate_gpt_cron} from "../gpt.ts";
 
 let selected_hour: string|undefined, selected_minutes: string |undefined;
 let med_name: string;
@@ -15,15 +16,28 @@ async function add(conversation: MyConversation, ctx: MyContext) {
     await ctx.reply("Choose type of reminders:" +
         "\n\nSpecified reminder: " +
         "\nSpecify weekdays and exact time when reminder will be sent to you" +
-        "\n\nGPT-generated reminder: " +
-        "\nText the preferred schedule and GPT will try to infer it", {
+        "\n\nAI-generated reminder: " +
+        "\nText the preferred schedule and AI (artificial intelligence) will try to infer it", {
         reply_markup: reminder_type_choice
     });
+}
+
+async function gpt(conversation: MyConversation, ctx: MyContext) {
+    await ctx.reply("Text me a schedule that AI will try to infer for your reminder: " +
+        "\n\nYour text must include time and days" +
+        "\n\nExamples: \n- every two days at 12:45" +
+        "\n- every two hours on monday and saturday" +
+        "\n- every 1,3 day of month at 21:15");
+
+    const text = await conversation.form.text();
+    const cron = generate_gpt_cron(text);
 }
 
 export function add_med_convo() {
     // @ts-ignore working, taken from https://grammy.dev/plugins/conversations, still Deno complains
     bot.use(createConversation(add));
+    // @ts-ignore working, taken from https://grammy.dev/plugins/conversations, still Deno complains
+    bot.use(createConversation(gpt));
 
     bot.hears("Add a medication 💊", async (ctx) => {
         await ctx.conversation.enter("add");
@@ -92,6 +106,10 @@ export function add_callbacks() {
         return await ctx.reply("Added!", {
             reply_markup: main_menu
         });
+    })
+
+    bot.callbackQuery("gpt", async (ctx) =>{
+        await ctx.conversation.enter("gpt");
     })
 
     bot.callbackQuery("mon", async (ctx) => {
