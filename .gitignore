@@ -9,3 +9,6 @@ deno.lock
 # npm
 package-lock.json
 node_modules
+
+# prisma
+generated
