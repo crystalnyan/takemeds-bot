@@ -1,4 +1,11 @@
 .env
+
+# jetbrains
 .idea
-db.sqlite3
+
+# deno
 deno.lock
+
+# npm
+package-lock.json
+node_modules
