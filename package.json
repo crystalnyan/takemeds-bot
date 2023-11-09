@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@dotenv-run/cli": "^1.2.0",
+    "prisma": "^5.5.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.5.2",
+    "dotenv-cli": "^7.3.0"
+  }
+}

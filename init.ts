@@ -5,6 +5,7 @@ import { load_crons } from "./cron.ts";
 import { create_meds_table } from "./database/db.ts";
 import {Bot, Context, Conversation, ConversationFlavor, conversations, load, OpenAI, session} from "./deps.ts";
 import delta from "./delta/mod.ts";
+import {PrismaClient} from "./deps.ts";
 
 const env = await load();
 export const token = env["BOT_TOKEN"];
@@ -15,6 +16,8 @@ export type MyConversation = Conversation<MyContext>;
 
 export const bot = new Bot<MyContext>(token);
 export const openAI = new OpenAI(api_key);
+
+export const prisma = new PrismaClient();
 
 export function init() {
     bot.use(session({ initial: () => ({}) }));
