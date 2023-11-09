@@ -36,7 +36,7 @@ async function gpt(conversation: MyConversation, ctx: MyContext) {
     if (!cron) return;
     add_med(med_name, ctx.chat.id, cron);
     try {
-        await schedule(ctx.chat.id, med_name, cron);
+        schedule(ctx.chat.id, med_name, cron);
     } catch (err) { return; }
 
     return await ctx.reply("Added!", {
@@ -111,7 +111,7 @@ export function add_callbacks() {
         if (ctx.chat == undefined) return;
         add_med(med_name, ctx.chat.id, cron);
         try {
-            await schedule(ctx.chat.id, med_name, cron);
+            schedule(ctx.chat.id, med_name, cron);
         } catch (err) { return; }
 
         return await ctx.reply("Added!", {
