@@ -1,4 +1,4 @@
 .env
 .idea
 db.sqlite3
-pusher.sh
+deno.lock
