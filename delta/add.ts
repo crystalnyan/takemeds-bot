@@ -30,7 +30,18 @@ async function gpt(conversation: MyConversation, ctx: MyContext) {
         "\n- every 1,3 day of month at 21:15");
 
     const text = await conversation.form.text();
-    const cron = generate_gpt_cron(text);
+    const cron = await generate_gpt_cron(text);
+
+    if (ctx.chat == undefined) return;
+    if (!cron) return;
+    add_med(med_name, ctx.chat.id, cron);
+    try {
+        await schedule(ctx.chat.id, med_name, cron);
+    } catch (err) { return; }
+
+    return await ctx.reply("Added!", {
+        reply_markup: main_menu
+    });
 }
 
 export function add_med_convo() {
@@ -100,7 +111,7 @@ export function add_callbacks() {
         if (ctx.chat == undefined) return;
         add_med(med_name, ctx.chat.id, cron);
         try {
-            schedule(ctx.chat.id, med_name, cron);
+            await schedule(ctx.chat.id, med_name, cron);
         } catch (err) { return; }
 
         return await ctx.reply("Added!", {

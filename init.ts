@@ -11,7 +11,7 @@ export const token = env["BOT_TOKEN"];
 export const api_key = env["API_KEY"];
 
 export type MyContext = Context & ConversationFlavor;
-export type MyConversation = Conversation<MyContext>;2
+export type MyConversation = Conversation<MyContext>;
 
 export const bot = new Bot<MyContext>(token);
 export const openAI = new OpenAI(api_key);

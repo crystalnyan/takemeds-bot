@@ -11,16 +11,22 @@ export async function generate_gpt_cron(text: string) {
         }]
     })
 
+    console.log(reply);
     const reply_text = reply.choices[0].message.content;
 
     if (!reply_text) {
         console.log("no cron in gpt reply");
         return;
     }
+    if(!get_cron(reply_text)) {
+        console.log("no cron could be extracted from reply");
+        return;
+    }
 
-    console.log(get_cron(reply_text));
+    return get_cron(reply_text)?.[1];
 }
 
 function get_cron(gpt_reply: string) {
-    return gpt_reply.split("")[1];
+    const re = /"([^"]+)"/g;
+    return re.exec(gpt_reply);
 }
