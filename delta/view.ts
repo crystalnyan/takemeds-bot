@@ -2,13 +2,14 @@ import { z } from "../deps.ts";
 import { bot } from "../init.ts";
 import { main_menu, meds_menu } from "../keyboards.ts";
 import { Med } from "../schemas.ts";
-import {cron_to_string, view_meds} from "../types/med.ts";
+import { get_meds } from "../types/med.ts";
+import { cron_to_string } from "../utils.ts";
 
 export function view_callbacks() {
     bot.hears("View your meds", async (ctx) => {
         await ctx.reply("Your meds:");
 
-        const result = await view_meds(ctx.chat.id);
+        const result = await get_meds(ctx.chat.id);
         const meds = z.array(Med).safeParse(result);
         if (!meds.success){
             await ctx.reply('Error in viewing meds!', {
