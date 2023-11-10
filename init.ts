@@ -2,7 +2,6 @@
 // exactly like in the docs at https://grammy.dev/plugins/conversations
 
 import { load_crons } from "./cron.ts";
-import { create_meds_table } from "./database/db.ts";
 import {Bot, Context, Conversation, ConversationFlavor, conversations, load, OpenAI, session} from "./deps.ts";
 import delta from "./delta/mod.ts";
 import {PrismaClient} from "./deps.ts";
@@ -24,6 +23,5 @@ export function init() {
     bot.use(conversations());
 
     delta(bot);
-    create_meds_table();
     load_crons();
 }

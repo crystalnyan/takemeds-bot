@@ -11,7 +11,6 @@ export async function generate_gpt_cron(text: string) {
         }]
     })
 
-    console.log(reply);
     const reply_text = reply.choices[0].message.content;
 
     if (!reply_text) {
