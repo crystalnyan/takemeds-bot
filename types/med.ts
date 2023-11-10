@@ -1,55 +1,35 @@
-import {delete_med_row, get_meds_rows, add_med_row} from "../database/db.ts";
-import {remove_cron} from "../cron.ts";
+//import {delete_med_row} from "../database/db.ts";
+//import {remove_cron} from "../cron.ts";
+import {prisma} from "../init.ts";
 
-export type Med = {
-    id: number;
-    name: string;
-    chat_id: number;
-    cron: string;
+export async function add_med(name: string, chat_id: number, cron: string) {
+    return await prisma.med.create({
+        data: {
+            name: name,
+            cron: cron,
+            chat_id: chat_id,
+        },
+    })
 }
 
-export function add_med(name: string, chat_id: number, cron: string) {
-    add_med_row(name, chat_id, cron);
-}
-
-export function view_meds(chat_id: number) {
-    let meds_list_msg = "";
-    const rows = get_meds(chat_id);
-
-    let count = 1;
-    for (const med of rows) {
-        meds_list_msg = meds_list_msg.concat(count + ". " + to_string(med) + "\n");
-        count += 1;
-    }
-
-    return meds_list_msg;
+export async function view_meds(chat_id: number) {
+    return await prisma.med.findMany({
+        where: {
+            chat_id: chat_id,
+        },
+    });
 }
 
 export function delete_med(at: number, chat_id: number) {
-    const rows = get_meds(chat_id);
+    /*const rows = get_meds(chat_id);
 
     const med = rows[at - 1];
 
     delete_med_row(med.id);
-    remove_cron(med.name + med.cron + med.chat_id);
+    remove_cron(med.name + med.cron + med.chat_id);*/
 }
 
-export function get_meds(chat_id: number): Med[] {
-    const rows = get_meds_rows(chat_id);
-
-    const meds: Med[] = [];
-    for (const [id, name, chat_id, cron] of rows) {
-        meds.push(<Med>{id, name, chat_id, cron});
-    }
-
-    return meds;
-}
-
-function to_string(med: Med) {
-    return med.name + " " + cron_to_string(med.cron);
-}
-
-function cron_to_string(cron: string) {
+export function cron_to_string(cron: string) {
     const [minutes, hour, _days, _months, weekdays] = cron.split(" ");
 
     return hour + ":" + minutes + " " + get_weekdays_from_cron(weekdays)

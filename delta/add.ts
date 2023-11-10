@@ -1,9 +1,10 @@
-import {createConversation} from "../deps.ts";
+import { createConversation } from "../deps.ts";
 import { add_med } from "../types/med.ts";
 import {schedule} from "../cron.ts";
 import { MyContext, MyConversation, bot } from "../init.ts";
 import { main_menu, time_choice, reminder_type_choice, weekdays_choice } from "../keyboards.ts";
 import {generate_gpt_cron} from "../gpt.ts";
+import { Med } from "../schemas.ts";
 
 let selected_hour: string|undefined, selected_minutes: string |undefined;
 let med_name: string;
@@ -34,14 +35,25 @@ async function gpt(conversation: MyConversation, ctx: MyContext) {
 
     if (ctx.chat == undefined) return;
     if (!cron) return;
-    add_med(med_name, ctx.chat.id, cron);
+
+    const result = await add_med(med_name, ctx.chat.id, cron);
+    if (!Med.safeParse(result).success) {
+        await ctx.reply('Something went wrong! Could not add a new med', {
+            reply_markup: main_menu
+        });
+    }
+
     try {
         schedule(ctx.chat.id, med_name, cron);
-    } catch (err) { return; }
-
-    return await ctx.reply("Added!", {
-        reply_markup: main_menu
-    });
+        await ctx.reply("Added!", {
+            reply_markup: main_menu
+        });
+    } catch (err) {
+        console.log(err);
+        await ctx.reply("Could not schedule a new med!", {
+            reply_markup: main_menu
+        });
+    }
 }
 
 export function add_med_convo() {
@@ -109,14 +121,28 @@ export function add_callbacks() {
         const cron = `${selected_minutes} ${selected_hour} * * ${selected_weekdays}`;
 
         if (ctx.chat == undefined) return;
-        add_med(med_name, ctx.chat.id, cron);
+
+        const result = await add_med(med_name, ctx.chat.id, cron);
+        console.log(result);
+        console.log(Med.safeParse(result));
+        if (!Med.safeParse(result).success) {
+            await ctx.reply('Something went wrong! Could not add a new med', {
+                reply_markup: main_menu
+            });
+            return;
+        }
+
         try {
             schedule(ctx.chat.id, med_name, cron);
-        } catch (err) { return; }
-
-        return await ctx.reply("Added!", {
-            reply_markup: main_menu
-        });
+            await ctx.reply("Added!", {
+                reply_markup: main_menu
+            });
+        } catch (err) {
+            console.log(err);
+            await ctx.reply("Could not schedule a new med!", {
+                reply_markup: main_menu
+            });
+        }
     })
 
     bot.callbackQuery("gpt", async (ctx) =>{
@@ -155,7 +181,7 @@ enum TimeChangeArgs {
 
 async function change_weekdays(ctx: MyContext, index: number) {
     if (weekdays[index] == 0 ) {
-            weekdays[index] =1;
+            weekdays[index] = 1;
             // @ts-ignore working, Deno complains
             ctx.callbackQuery.message.reply_markup.inline_keyboard[index - 1][0].text =
                 // @ts-ignore working, Deno complains
@@ -164,7 +190,10 @@ async function change_weekdays(ctx: MyContext, index: number) {
                 await ctx.editMessageReplyMarkup({
                     // @ts-ignore working, Deno complains
                     reply_markup: ctx.callbackQuery.message.reply_markup})
-            } catch (err) {}
+            } catch (err) {
+                console.log(err);
+                await ctx.reply('Something went wrong while changing weekdays!')
+            }
     } else {
         weekdays[index] = 0;
         // @ts-ignore working, Deno complains
@@ -175,7 +204,10 @@ async function change_weekdays(ctx: MyContext, index: number) {
                 await ctx.editMessageReplyMarkup({
                     // @ts-ignore working, Deno complains
                     reply_markup: ctx.callbackQuery.message.reply_markup})
-            } catch (err) {}
+            } catch (err) {
+                console.log(err);
+                await ctx.reply('Something went wrong while changing weekdays!')
+            }
     }
 }
 
@@ -240,5 +272,8 @@ async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArg
         await ctx.editMessageReplyMarkup({
             // @ts-ignore working, Deno complains
             reply_markup: ctx.callbackQuery.message.reply_markup})
-    } catch (err) {}
+    } catch (err) {
+        console.log(err);
+        await ctx.reply('Something went wrong while changing time!')
+    }
 }
