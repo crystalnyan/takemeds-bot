@@ -1,7 +1,9 @@
 import {delete_med, get_meds} from "../types/med.ts";
 import {MyContext, MyConversation, bot} from "../init.ts";
-import {createConversation} from "../deps.ts";
+import {createConversation, z} from "../deps.ts";
 import { main_menu } from "../keyboards.ts";
+import { remove_cron } from "../cron.ts";
+import {Med} from "../schemas.ts";
 
 async function delete_convo(conversation: MyConversation, ctx: MyContext) {
     await ctx.reply("Please type the index of the med to delete:");
@@ -9,7 +11,7 @@ async function delete_convo(conversation: MyConversation, ctx: MyContext) {
         await ctx.reply("This isn't even a number...\nTry again:"));
 
     // @ts-ignore,
-    const rows = get_meds(ctx.chat.id);
+    const rows = await get_meds(ctx.chat.id);
 
     while (!isValidIndex(med_index, rows.length)) {
         await ctx.reply(`We don't have such an index...` +
@@ -19,8 +21,30 @@ async function delete_convo(conversation: MyConversation, ctx: MyContext) {
         await ctx.reply("This isn't even a number...\nTry again:"));
     }
 
-    // @ts-ignore,
-    delete_med(med_index, ctx.chat.id);
+    if (!ctx.chat) return;
+
+    const all_meds = await get_meds(ctx.chat.id);
+    const meds = z.array(Med).safeParse(all_meds);
+    if (!meds.success){
+        await ctx.reply('Error in getting meds!', {
+            reply_markup: main_menu
+        });
+        return;
+    }
+    const med = meds.data[med_index-1];
+
+    try{
+        await delete_med(med.id);
+    } catch (err) {
+        console.log(err);
+        await ctx.reply("Could no delete a med", {
+            reply_markup: main_menu
+        });
+        return;
+    }
+
+    remove_cron(med.name + med.cron + med.chat_id);
+
     await ctx.reply("Deleted!", {
         reply_markup: main_menu
     })
