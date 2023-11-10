@@ -7,3 +7,4 @@ export {type Conversation, type ConversationFlavor, conversations, createConvers
     from 'https://deno.land/x/grammy_conversations@v1.1.2/mod.ts';
 export { OpenAI } from "https://deno.land/x/openai@1.4.2/mod.ts";
 export {PrismaClient} from './generated/client/deno/edge.ts';
+export {z} from "https://deno.land/x/zod@v3.16.1/mod.ts";
