@@ -1,14 +1,13 @@
-import {Cron} from "./deps.ts";
-import {get_all_meds_rows} from "./database/db.ts";
-import {bot} from "./init.ts";
-import {Med} from "./types/med.ts";
+import {Cron, z} from "./deps.ts";
+import {bot, prisma} from "./init.ts";
+import {Med} from "./schemas.ts";
 
 export function load_crons() {
     new Cron(
         "* * * * *",
         {maxRuns: 1},
         () => {
-            schedule_all();
+          schedule_all().then();
         });
 }
 
@@ -34,11 +33,15 @@ export function remove_cron(name: string) {
     if ( job !== undefined ) job.stop();
 }
 
-function schedule_all() {
-        const rows = get_all_meds_rows();
+async function schedule_all() {
+        const result = await prisma.med.findMany();
+        const meds = z.array(Med).safeParse(result);
+        if (!meds.success){
+          console.log('CRONS COULD NOT BE LOADED');
+          return;
+        }
 
-        for (const [_id, name, chat_id, cron] of rows) {
-            const med = <Med>{name, chat_id, cron};
-            schedule(med.chat_id, med.name, med.cron);
+        for (const med of meds.data) {
+          await schedule(med.chat_id, med.name, med.cron);
         }
 }
