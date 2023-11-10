@@ -43,7 +43,7 @@ async function delete_convo(conversation: MyConversation, ctx: MyContext) {
         return;
     }
 
-    remove_cron(med.name + med.cron + med.chat_id);
+    remove_cron(med.name + med.cron + med.chat_id + med.id);
 
     await ctx.reply("Deleted!", {
         reply_markup: main_menu

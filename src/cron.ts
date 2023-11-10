@@ -11,11 +11,11 @@ export function load_crons() {
         });
 }
 
-export function schedule(chat_id: number, name: string, cron: string) {
+export function schedule(med_id: number, chat_id: number, name: string, cron: string) {
     try {
         new Cron(
             cron,
-            {name: name + cron + chat_id},
+            {name: name + cron + chat_id + med_id},
             () => {
                 const message = "\*" + "Reminder❗*" + `\n\nYou should take ${name} now`;
                 bot.api.sendMessage(chat_id, message, {
@@ -42,6 +42,6 @@ async function schedule_all() {
         }
 
         for (const med of meds.data) {
-          await schedule(med.chat_id, med.name, med.cron);
+          await schedule(med.id, med.chat_id, med.name, med.cron);
         }
 }
