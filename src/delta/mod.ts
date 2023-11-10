@@ -1,4 +1,4 @@
-import { Bot } from "../deps.ts";
+import { Bot } from "../../deps.ts";
 import start from "./start.ts";
 import {add_callbacks, add_med_convo} from "./add.ts";
 import {view_callbacks} from "./view.ts";

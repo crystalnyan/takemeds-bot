@@ -1,6 +1,6 @@
-import {Cron, z} from "./deps.ts";
+import {Cron, z} from "../deps.ts";
 import {bot, prisma} from "./init.ts";
-import {Med} from "./schemas.ts";
+import {Med} from "./zod/schemas.ts";
 
 export function load_crons() {
     new Cron(

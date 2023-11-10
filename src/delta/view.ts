@@ -1,7 +1,7 @@
-import { z } from "../deps.ts";
+import { z } from "../../deps.ts";
 import { bot } from "../init.ts";
 import { main_menu, meds_menu } from "../keyboards.ts";
-import { Med } from "../schemas.ts";
+import { Med } from "../zod/schemas.ts";
 import { get_meds } from "../types/med.ts";
 import { cron_to_string } from "../utils.ts";
 

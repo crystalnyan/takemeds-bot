@@ -1,4 +1,4 @@
-import { Composer } from "../deps.ts";
+import { Composer } from "../../deps.ts";
 import { main_menu } from "../keyboards.ts";
 
 const composer = new Composer();

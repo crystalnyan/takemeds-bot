@@ -1,7 +1,6 @@
 {
   "tasks": {
-    "start": "dotenv-run -- deno run -A bot.ts",
-    "migrate": "npx prisma migrate dev",
-    "start-db": "docker compose -f postgres.yaml up"
+    "start": "dotenv-run -- deno run -A ./src/bot.ts",
+    "generate": "deno run -A --unstable npm:prisma generate --no-engine --schema=./src/prisma/schema.prisma"
   }
 }

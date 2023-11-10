@@ -1,10 +1,10 @@
-import { createConversation } from "../deps.ts";
+import { createConversation } from "../../deps.ts";
 import { add_med } from "../types/med.ts";
 import {schedule} from "../cron.ts";
 import { MyContext, MyConversation, bot } from "../init.ts";
 import { main_menu, time_choice, reminder_type_choice, weekdays_choice } from "../keyboards.ts";
 import {generate_gpt_cron} from "../gpt.ts";
-import { Med } from "../schemas.ts";
+import { Med } from "../zod/schemas.ts";
 
 let selected_hour: string|undefined, selected_minutes: string |undefined;
 let med_name: string;

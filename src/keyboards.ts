@@ -1,5 +1,5 @@
 import { Keyboard } from "https://deno.land/x/grammy@v1.17.2/mod.ts";
-import { InlineKeyboard } from "./deps.ts";
+import { InlineKeyboard } from "../deps.ts";
 
 export const main_menu = new Keyboard()
     .text("Add a medication 💊").row()

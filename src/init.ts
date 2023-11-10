@@ -2,9 +2,9 @@
 // exactly like in the docs at https://grammy.dev/plugins/conversations
 
 import { load_crons } from "./cron.ts";
-import {Bot, Context, Conversation, ConversationFlavor, conversations, load, OpenAI, session} from "./deps.ts";
+import {Bot, Context, Conversation, ConversationFlavor, conversations, load, OpenAI, session} from "../deps.ts";
 import delta from "./delta/mod.ts";
-import {PrismaClient} from "./deps.ts";
+import {PrismaClient} from "../deps.ts";
 
 const env = await load();
 export const token = env["BOT_TOKEN"];

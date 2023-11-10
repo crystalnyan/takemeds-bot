@@ -1,9 +1,9 @@
 import {delete_med, get_meds} from "../types/med.ts";
 import {MyContext, MyConversation, bot} from "../init.ts";
-import {createConversation, z} from "../deps.ts";
+import {createConversation, z} from "../../deps.ts";
 import { main_menu } from "../keyboards.ts";
 import { remove_cron } from "../cron.ts";
-import {Med} from "../schemas.ts";
+import {Med} from "../zod/schemas.ts";
 
 async function delete_convo(conversation: MyConversation, ctx: MyContext) {
     await ctx.reply("Please type the index of the med to delete:");

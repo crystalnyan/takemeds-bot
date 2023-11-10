@@ -6,5 +6,5 @@ export { Cron } from "https://deno.land/x/croner@6.0.3/dist/croner.js";
 export {type Conversation, type ConversationFlavor, conversations, createConversation}
     from 'https://deno.land/x/grammy_conversations@v1.1.2/mod.ts';
 export { OpenAI } from "https://deno.land/x/openai@1.4.2/mod.ts";
-export {PrismaClient} from './generated/client/deno/edge.ts';
+export {PrismaClient} from './src/generated/client/deno/edge.ts';
 export {z} from "https://deno.land/x/zod@v3.16.1/mod.ts";

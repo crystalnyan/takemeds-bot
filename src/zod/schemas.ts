@@ -1,4 +1,4 @@
-import {z} from "./deps.ts";
+import {z} from "../../deps.ts";
 
 export const Med = z.object({
   id: z.number().int().positive(),
