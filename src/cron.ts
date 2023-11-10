@@ -22,9 +22,9 @@ export function schedule(med_id: number, chat_id: number, name: string, cron: st
                     parse_mode: "MarkdownV2"
                 });
             });
-    } catch (err) {
-        console.log(err);
-        return bot.api.sendMessage(chat_id,"Error in scheduling");
+    } catch (_err) {
+        bot.api.sendMessage(chat_id,"Error in scheduling");
+        throw new Error("Error in scheduling");
     }
 }
 
@@ -42,6 +42,8 @@ async function schedule_all() {
         }
 
         for (const med of meds.data) {
-          await schedule(med.id, med.chat_id, med.name, med.cron);
+          try {
+            schedule(med.id, med.chat_id, med.name, med.cron);
+          } catch (_err) { continue; }
         }
 }

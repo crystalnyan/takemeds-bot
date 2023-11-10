@@ -15,7 +15,7 @@ async function delete_convo(conversation: MyConversation, ctx: MyContext) {
 
     while (!isValidIndex(med_index, rows.length)) {
         await ctx.reply(`We don't have such an index...` +
-            `\nPlease, choose between 1 and ${rows.length}`);
+            `\nPlease, choose from the list.`);
 
         med_index = await conversation.form.number(async () =>
         await ctx.reply("This isn't even a number...\nTry again:"));
@@ -51,7 +51,7 @@ async function delete_convo(conversation: MyConversation, ctx: MyContext) {
 }
 
 function isValidIndex(index: number, last: number) {
-    return index < last && index >= 1;
+    return index <= last && index >= 1;
 }
 
 export function delete_med_convo() {

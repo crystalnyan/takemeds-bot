@@ -1,10 +1,10 @@
 import { createConversation } from "../../deps.ts";
-import { add_med } from "../types/med.ts";
+import {add_med, delete_med} from "../types/med.ts";
 import {schedule} from "../cron.ts";
 import { MyContext, MyConversation, bot } from "../init.ts";
 import { main_menu, time_choice, reminder_type_choice, weekdays_choice } from "../keyboards.ts";
 import {generate_gpt_cron} from "../gpt.ts";
-import { Med } from "../zod/schemas.ts";
+import { Cron, Med } from "../zod/schemas.ts";
 
 let selected_hour: string|undefined, selected_minutes: string |undefined;
 let med_name: string;
@@ -33,6 +33,13 @@ async function gpt(conversation: MyConversation, ctx: MyContext) {
     const text = await conversation.form.text();
     const cron = await generate_gpt_cron(text);
 
+    if (!Cron.safeParse(cron).success) {
+        await ctx.reply("Generated cron is invalid! Please try again later or set a reminder manually", {
+            reply_markup: main_menu
+        });
+        return;
+    }
+
     if (ctx.chat == undefined) return;
     if (!cron) return;
 
@@ -45,15 +52,16 @@ async function gpt(conversation: MyConversation, ctx: MyContext) {
 
     try {
         await schedule(result.id, ctx.chat.id, med_name, cron);
-        await ctx.reply("Added!", {
-            reply_markup: main_menu
-        });
-    } catch (err) {
-        console.log(err);
+    } catch (_err) {
         await ctx.reply("Could not schedule a new med!", {
             reply_markup: main_menu
         });
+        await delete_med(result.id);
+        return;
     }
+    await ctx.reply("Added!", {
+        reply_markup: main_menu
+    });
 }
 
 export function add_med_convo() {
@@ -133,16 +141,17 @@ export function add_callbacks() {
         }
 
         try {
-            await schedule(result.id, ctx.chat.id, med_name, cron);
-            await ctx.reply("Added!", {
-                reply_markup: main_menu
-            });
-        } catch (err) {
-            console.log(err);
+            schedule(result.id, ctx.chat.id, med_name, cron);
+        } catch (_err) {
             await ctx.reply("Could not schedule a new med!", {
                 reply_markup: main_menu
             });
+            await delete_med(result.id);
+            return;
         }
+        await ctx.reply("Added!", {
+            reply_markup: main_menu
+        });
     })
 
     bot.callbackQuery("gpt", async (ctx) =>{
