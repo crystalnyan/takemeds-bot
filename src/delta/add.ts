@@ -281,8 +281,5 @@ async function change_time( ctx: MyContext, args: [TimeChangeArgs, TimeChangeArg
         await ctx.editMessageReplyMarkup({
             // @ts-ignore working, Deno complains
             reply_markup: ctx.callbackQuery.message.reply_markup})
-    } catch (err) {
-        console.log(err);
-        await ctx.reply('Something went wrong while changing time!')
-    }
+    } catch (_err) {;}
 }
