@@ -23,8 +23,9 @@ export function schedule(med_id: number, chat_id: number, name: string, cron: st
                 });
             });
     } catch (_err) {
-        bot.api.sendMessage(chat_id,"Error in scheduling");
-        throw new Error("Error in scheduling");
+      const message = "Error in scheduling: " + name;
+        bot.api.sendMessage(chat_id,message);
+        throw new Error(message);
     }
 }
 
