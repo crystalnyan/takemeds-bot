@@ -1,7 +1,12 @@
 export function cron_to_string(cron: string) {
   const [minutes, hour, _days, _months, weekdays] = cron.split(" ");
 
-  return hour + ":" + minutes + " " + get_weekdays_from_cron(weekdays)
+  let zero_minutes;
+  if (+minutes == 0) {
+    zero_minutes = "00";
+  }
+
+  return hour + ":" + (zero_minutes || minutes) + " " + get_weekdays_from_cron(weekdays)
 }
 
 function get_weekdays_from_cron(weekdays_cron: string) {
