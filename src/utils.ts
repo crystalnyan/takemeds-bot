@@ -10,7 +10,7 @@ export function cron_to_string(cron: string) {
 }
 
 function get_weekdays_from_cron(weekdays_cron: string) {
-  if (weekdays_cron == "*") return "gpt-generated"
+  if (isNaN(Number.parseInt(weekdays_cron))) return "gpt-generated";
 
   let result = "";
   const weekdays = weekdays_cron.split(",");
